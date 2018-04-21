@@ -1,0 +1,106 @@
+<p-card>
+    <img src="./../assets/image/logo.png">
+    <p>a smart fake api rest generator</p>
+  </p-card>
+  <p-dataView [value]="projects">
+    <p-header>
+      <div class="ui-g">
+        <div class="ui-g-2 ui-md-2">
+          <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+        </div>
+        <div class="ui-g-8 ui-md-8"></div>
+        <div class="ui-g-2 ui-md-2">
+          <p-button (onClick)="addProject()" label="Add"></p-button>
+        </div>
+      </div>
+    </p-header>
+
+    <ng-template let-project pTemplate="listItem">
+      <div class="ui-g" style="padding: 2em;border-bottom: 1px solid #d9d9d9">
+        <div class="ui-g-12 ui-md-3" style="text-align:center">
+            <b>{{project.name}}</b>
+        </div>
+        <div class="ui-g-12 ui-md-8 project-details">
+          <div class="ui-g">
+            <div class="ui-g-2 ui-sm-6">id: </div>
+            <div class="ui-g-10 ui-sm-6">
+              <b>{{project.id}}</b>
+            </div>
+            <div class="ui-g-2 ui-sm-6">created: </div>
+            <div class="ui-g-10 ui-sm-6">
+              <b>{{momentDate(project.created)}}</b>
+            </div>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-1 buttons">
+          <button pButton type="button" icon="fa-search" (click)="selectProject($event, project)"></button>
+          <button pButton type="button" icon="fa-remove" (click)="deleteProjectDialog($event, project)"></button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template let-project pTemplate="gridItem">
+        <div class="ui-g-2 ui-md-2"></div>
+      <div class="ui-g-8 ui-md-4">
+        {{project.name}}
+      </div>
+      <div class="ui-g-8 ui-md-4">
+          {{momentDate(project.created)}}
+        </div>
+      <div class="ui-g-2 ui-md-1 buttons">
+          <button pButton type="button" icon="fa-search" (click)="selectProject($event, project)"></button>
+          <button pButton type="button" icon="fa-remove" (click)="deleteProjectDialog($event, project)"></button>
+        </div>
+    </ng-template>
+  </p-dataView>
+
+  <p-dialog header="Project Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" width="665"
+    (onAfterHide)="onDialogHide()">
+    <div class="ui-g" *ngIf="selectedProject">
+      <div class="ui-g-12" style="text-align:center">
+        ciao
+      </div>
+      <div class="ui-g-4">id: </div>
+      <div class="ui-g-8">{{selectedProject.id}}</div>
+
+      <div class="ui-g-4">Name: </div>
+      <div class="ui-g-8">{{selectedProject.name}}</div>
+
+      <div class="ui-g-4">Created: </div>
+      <div class="ui-g-8">{{momentDate(selectedProject.created)}}</div>
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Add Project" [(visible)]="displayAddProjectDialog" [responsive]="true" showEffect="fade" [modal]="true"
+    width="625" height="170" (onAfterHide)="onDialogHide()">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-2 ui-md-2"></div>
+      <div class="ui-g-1 ui-md-1">
+        name:
+      </div>
+      <div class="ui-g-5 ui-md-5">
+        <div class="ui-inputgroup">
+          <input [(ngModel)]="addProjectName" id="float-input" type="text" size="30" pInputText>
+        </div>
+      </div>
+      <div class="ui-g-1 ui-md-1"></div>
+      <div class="ui-g-3 ui-md-3">
+        <p-button (onClick)="SaveProject()" label="Save"></p-button>
+      </div>
+      <div class="ui-g-12 ui-md-12">
+        <p-message *ngIf="error && error.length > 0" severity="error" text="{{error}}"></p-message>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Delete Project" [(visible)]="displayDeleteProjectDialog" [responsive]="true" showEffect="fade" [modal]="true"
+    width="625" height="150" (onAfterHide)="onDialogHide()">
+    <div class="ui-g ui-fluid" *ngIf="deletedProject">
+      <div class="ui-g-9 ui-md-9">
+        Are you sure you want to delete {{ deletedProject.name }}
+      </div>
+      <div class="ui-g-9 ui-md-3">
+        <p-button (onClick)="deleteProject(deletedProject.id)" label="yes"></p-button>
+        <p-button (onClick)="displayDeleteProjectDialog  = false" label="no"></p-button>
+      </div>
+    </div>
+  </p-dialog>

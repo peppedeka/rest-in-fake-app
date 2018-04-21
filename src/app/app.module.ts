@@ -3,6 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
 
 
 import { AccordionModule } from 'primeng/accordion';
@@ -13,14 +14,22 @@ import { MenuModule } from 'primeng/menu';
 import { DataGridModule } from 'primeng/datagrid';
 import { DataViewModule } from 'primeng/dataview';
 import { DialogModule } from 'primeng/dialog';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 
 import { AppComponent } from './app.component';
 import { DataService } from './service/data.service';
+import { environment } from './../environments/environment';
+import { HomeProjectComponent } from './project/home/home.project';
 
+export const APP_ROUTES: Routes = [
+  { path: '', component: HomeProjectComponent }
+];
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeProjectComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +41,10 @@ import { DataService } from './service/data.service';
     CardModule,
     MenuModule,
     DataViewModule,
-    DialogModule
+    DialogModule,
+    MessagesModule,
+    MessageModule,
+    RouterModule.forRoot(APP_ROUTES)
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

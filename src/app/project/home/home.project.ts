@@ -5,14 +5,14 @@ import { Subscription } from 'rxjs/Subscription';
 
 import * as moment from 'moment';
 
-import { Project } from './../interface/project.interface';
-import { DataService } from './service/data.service';
+import { Project } from './../../../interface/project.interface';
+import { DataService } from './../../service/data.service';
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  templateUrl: './home.project.html',
+  styleUrls: ['./home.project.scss']
 })
-export class AppComponent implements OnInit {
+export class HomeProjectComponent implements OnInit {
   title = 'app';
   projects: Project[];
 
