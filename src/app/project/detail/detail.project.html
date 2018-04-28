@@ -10,54 +10,66 @@
     </div>
   </div>
 </p-card>
-<p-panel header="Organization chart">
-    <p-organizationChart [value]="organizationData"></p-organizationChart>
-</p-panel>
-<p-dataView [value]="project">
-    <p-header>
-      <div class="ui-g">
-        <div class="ui-g-2 ui-md-2">
-          <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
-        </div>
-        <div class="ui-g-8 ui-md-8"></div>
-        <div class="ui-g-2 ui-md-2">
-          <p-button (onClick)="addAPI()" label="Add API"></p-button>
-        </div>
-      </div>
-    </p-header>
-
-    <ng-template let-API pTemplate="listItem">
-      <div class="ui-g" style="padding: 2em;border-bottom: 1px solid #d9d9d9">
-        <div class="ui-g-12 ui-md-3" style="text-align:center">
-          <b>{{API.api}}</b>
-        </div>
-        <div class="ui-g-12 ui-md-8 API-details">
-          <div class="ui-g">
-            <div class="ui-g-2 ui-sm-6">id: </div>
-            <div class="ui-g-10 ui-sm-6">
-              <b>{{API.id}}</b>
-            </div>
-
+<div class="ui-g">
+  <div class="ui-g-6" *ngIf="selectedNode">
+    <p-panel header="Organization chart">
+      <p-organizationChart [value]="organizationData" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="onNodeSelect($event)"
+        styleClass="company">
+        <ng-template let-node pTemplate="person">
+          <div class="node-header ui-corner-top">{{node.label}}</div>
+          <div class="node-content">
+            <div>{{node.name}}</div>
           </div>
+        </ng-template>
+        <ng-template let-node pTemplate="department">
+          {{node.label}}
+        </ng-template>
+      </p-organizationChart>
+    </p-panel>
+  </div>
+  <div class="ui-g-12" *ngIf="isUnselected(selectedNode)">
+      <p-panel header="Organization chart">
+        <p-organizationChart [value]="organizationData" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="onNodeSelect($event)"
+          styleClass="company">
+          <ng-template let-node pTemplate="person">
+            <div class="node-header ui-corner-top">{{node.label}}</div>
+            <div class="node-content">
+              <div>{{node.name}}</div>
+            </div>
+          </ng-template>
+          <ng-template let-node pTemplate="department">
+            {{node.label}}
+          </ng-template>
+        </p-organizationChart>
+      </p-panel>
+    </div>
+  <div class="ui-g-6" *ngIf="selectedNode">
+    <p-panel header="{{detail}}">
+      <div class="ui-g" >
+          <div class="ui-g-12"> {{selectedNode.name}}</div>
+        <ng-container *ngIf="selectedNode.data.array !== undefined">
+          <div class="ui-g-6">
+            <p-inputSwitch onLabel="Array" offLabel="Single" [(ngModel)]="selectedNode.data.array"></p-inputSwitch>
+          </div>
+          <ng-container *ngIf="selectedNode.data.array">
+            <div class="ui-g-6">
+              <span class="ui-float-label">
+                <input id="float-input" type="text" size="30"[(ngModel)]="selectedNode.data.array_length" pInputText>
+                <label for="float-input">array length</label>
+              </span>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="selectedNode.data.array">
+            <div class="ui-g-6"></div>
+          </ng-container>
+        </ng-container>
+        <div class="ui-g-12">
+          field2
         </div>
-        <div class="ui-g-12 ui-md-1 buttons">
-          <button pButton type="button" icon="fa-search" [routerLink]="['/', API.name ]" routerLinkActive="active"></button>
-          <button pButton type="button" icon="fa-remove" (click)="deleteAPIDialog($event, API)"></button>
+        <div class="ui-g-12">
+          field3
         </div>
       </div>
-    </ng-template>
-    <ng-template let-API pTemplate="gridItem">
-      <div class="ui-g-2 ui-md-2"></div>
-      <div class="ui-g-8 ui-md-4">
-        {{API.name}}
-      </div>
-      <div class="ui-g-8 ui-md-4">
-        {{momentDate(API.created)}}
-      </div>
-      <div class="ui-g-2 ui-md-1 buttons">
-        <button pButton type="button" icon="fa-search" [routerLink]="['/', API.name ]" routerLinkActive="active"></button>
-        <button pButton type="button" icon="fa-remove" (click)="deleteAPIDialog($event, project)"></button>
-      </div>
-    </ng-template>
-  </p-dataView>
-
+    </p-panel>
+  </div>
+</div>

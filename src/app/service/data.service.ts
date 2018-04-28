@@ -30,7 +30,7 @@ export class DataService {
     return <Observable<Project[]>>this.doGet(environment.data.project);
   }
   getProjectDetails(project: string): Observable<Project> {
-    return this.doGet('project/' + project);
+    return this.doGet('project-details/' + project);
   }
   getAPIDetails(api: string): Observable<any[]> {
     return this.doGet('api/' + api);

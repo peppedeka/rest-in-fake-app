@@ -16,8 +16,10 @@ import { DataViewModule } from 'primeng/dataview';
 import { DialogModule } from 'primeng/dialog';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
-import {OrganizationChartModule} from 'primeng/organizationchart';
-import {PanelModule} from 'primeng/panel';
+import { OrganizationChartModule } from 'primeng/organizationchart';
+import { PanelModule } from 'primeng/panel';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { AppComponent } from './app.component';
 import { DataService } from './service/data.service';
@@ -51,6 +53,8 @@ export const APP_ROUTES: Routes = [
     MessageModule,
     OrganizationChartModule,
     PanelModule,
+    InputSwitchModule,
+    InputTextModule,
     RouterModule.forRoot(APP_ROUTES)
   ],
   providers: [DataService],
