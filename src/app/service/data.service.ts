@@ -35,6 +35,9 @@ export class DataService {
   getAPIDetails(api: string): Observable<any[]> {
     return this.doGet('api/' + api);
   }
+  getFakeApi(project: string, api: string) {
+    return this.doGet(project + '/' + api);
+  }
   postProject(param: string): Observable<any> {
     return this.doPost(environment.data.project, param);
   }

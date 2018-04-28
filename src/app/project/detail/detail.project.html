@@ -28,25 +28,25 @@
     </p-panel>
   </div>
   <div class="ui-g-12" *ngIf="isUnselected(selectedNode)">
-      <p-panel header="Organization chart">
-        <p-organizationChart [value]="organizationData" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="onNodeSelect($event)"
-          styleClass="company">
-          <ng-template let-node pTemplate="person">
-            <div class="node-header ui-corner-top">{{node.label}}</div>
-            <div class="node-content">
-              <div>{{node.name}}</div>
-            </div>
-          </ng-template>
-          <ng-template let-node pTemplate="department">
-            {{node.label}}
-          </ng-template>
-        </p-organizationChart>
-      </p-panel>
-    </div>
+    <p-panel header="Organization chart">
+      <p-organizationChart [value]="organizationData" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="onNodeSelect($event)"
+        styleClass="company">
+        <ng-template let-node pTemplate="person">
+          <div class="node-header ui-corner-top">{{node.label}}</div>
+          <div class="node-content">
+            <div>{{node.name}}</div>
+          </div>
+        </ng-template>
+        <ng-template let-node pTemplate="department">
+          {{node.label}}
+        </ng-template>
+      </p-organizationChart>
+    </p-panel>
+  </div>
   <div class="ui-g-6" *ngIf="selectedNode">
     <p-panel header="{{detail}}">
-      <div class="ui-g" >
-          <div class="ui-g-12"> {{selectedNode.name}}</div>
+      <div class="ui-g">
+        <div class="ui-g-12"> {{selectedNode.name}}</div>
         <ng-container *ngIf="selectedNode.data.array !== undefined">
           <div class="ui-g-6">
             <p-inputSwitch onLabel="Array" offLabel="Single" [(ngModel)]="selectedNode.data.array"></p-inputSwitch>
@@ -54,7 +54,7 @@
           <ng-container *ngIf="selectedNode.data.array">
             <div class="ui-g-6">
               <span class="ui-float-label">
-                <input id="float-input" type="text" size="30"[(ngModel)]="selectedNode.data.array_length" pInputText>
+                <input id="float-input" type="text" size="30" [(ngModel)]="selectedNode.data.array_length" pInputText>
                 <label for="float-input">array length</label>
               </span>
             </div>
@@ -73,3 +73,14 @@
     </p-panel>
   </div>
 </div>
+<p-panel header="Fake api rest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-scrollPanel [style]="{width: '100%', height: '200px'}">
+        <pre>
+              {{ fakeJson | json }}
+            </pre>
+      </p-scrollPanel>
+    </div>
+  </div>
+</p-panel>
