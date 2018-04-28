@@ -29,9 +29,16 @@ export class DataService {
   getProject(): Observable<Project[]> {
     return <Observable<Project[]>>this.doGet(environment.data.project);
   }
+  getProjectDetails(project: string): Observable<Project> {
+    return this.doGet('project/' + project);
+  }
+  getAPIDetails(api: string): Observable<any[]> {
+    return this.doGet('api/' + api);
+  }
   postProject(param: string): Observable<any> {
     return this.doPost(environment.data.project, param);
   }
+
   deleteProject(id: string): Observable<any> {
     return this.doDelete(environment.data.project, id);
   }

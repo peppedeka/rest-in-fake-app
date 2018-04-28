@@ -16,20 +16,25 @@ import { DataViewModule } from 'primeng/dataview';
 import { DialogModule } from 'primeng/dialog';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import {OrganizationChartModule} from 'primeng/organizationchart';
+import {PanelModule} from 'primeng/panel';
 
 import { AppComponent } from './app.component';
 import { DataService } from './service/data.service';
 import { environment } from './../environments/environment';
 import { HomeProjectComponent } from './project/home/home.project';
+import { DetailProjectComponent } from './project/detail/detail.project';
 
 export const APP_ROUTES: Routes = [
-  { path: '', component: HomeProjectComponent }
+  { path: '', component: HomeProjectComponent },
+  { path: ':id', component: DetailProjectComponent }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeProjectComponent
+    HomeProjectComponent,
+    DetailProjectComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +49,8 @@ export const APP_ROUTES: Routes = [
     DialogModule,
     MessagesModule,
     MessageModule,
+    OrganizationChartModule,
+    PanelModule,
     RouterModule.forRoot(APP_ROUTES)
   ],
   providers: [DataService],

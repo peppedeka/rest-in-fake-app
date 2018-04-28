@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { Project } from './../../../interface/project.interface';
 import { DataService } from './../../service/data.service';
 @Component({
-  selector: 'app-root',
+  selector: 'home-project',
   templateUrl: './home.project.html',
   styleUrls: ['./home.project.scss']
 })
@@ -16,10 +16,8 @@ export class HomeProjectComponent implements OnInit {
   title = 'app';
   projects: Project[];
 
-  selectedProject: Project;
   deletedProject: Project;
 
-  displayDialog: boolean;
   displayAddProjectDialog: boolean;
   displayDeleteProjectDialog: boolean;
 
@@ -67,22 +65,20 @@ export class HomeProjectComponent implements OnInit {
       this._refreshData();
     });
   }
-  selectProject(event: Event, project: Project): void {
-    this.selectedProject = project;
-    this.displayDialog = true;
-    event.preventDefault();
-    console.log(project);
+  deleteAPI(projectName: string, id: string) {
+    this._dataService.deleteProject(id).subscribe((res) => {
+      this.displayDeleteProjectDialog = false;
+      this._refreshData();
+    });
   }
+
   deleteProjectDialog(event: Event, project: Project): void {
     this.deletedProject = project;
     this.displayDeleteProjectDialog = true;
     event.preventDefault();
     console.log(project);
   }
-  onDialogHide(): void {
-    this.selectedProject = null;
 
-  }
   momentDate(date: any): any {
     return moment(date).format('HH:hh - DD MMM YY');
   }
