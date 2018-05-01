@@ -22,6 +22,10 @@ export class DataService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
     return this._http.post(this.baseUrl + url + '/', param, { headers: headers });
   }
+  doPut(url: string, param: string): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
+    return this._http.put(this.baseUrl + url + '/', param, { headers: headers });
+  }
   doDelete(url: string, id: string): Observable<any> {
     return this._http.delete(this.baseUrl + url + '/' + id);
   }
@@ -38,11 +42,20 @@ export class DataService {
   getFakeApi(project: string, api: string) {
     return this.doGet(project + '/' + api);
   }
+  getObj(obj: string) {
+    return this.doGet('obj/' + obj);
+  }
   postProject(param: string): Observable<any> {
     return this.doPost(environment.data.project, param);
   }
 
   deleteProject(id: string): Observable<any> {
     return this.doDelete(environment.data.project, id);
+  }
+  saveElement(type: string, obj: object) {
+    if (type === 'object') {
+      type = 'obj';
+    }
+    return this.doPut(type + '/' + obj['name'], JSON.stringify(obj));
   }
 }

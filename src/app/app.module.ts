@@ -20,9 +20,11 @@ import { OrganizationChartModule } from 'primeng/organizationchart';
 import { PanelModule } from 'primeng/panel';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
-import {ScrollPanelModule} from 'primeng/scrollpanel';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { SliderModule } from 'primeng/slider';
 
-import {PrettyJsonModule} from 'angular2-prettyjson';
+
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 import { AppComponent } from './app.component';
 import { DataService } from './service/data.service';
@@ -59,8 +61,9 @@ export const APP_ROUTES: Routes = [
     InputSwitchModule,
     InputTextModule,
     ScrollPanelModule,
+    NgxJsonViewerModule,
+    SliderModule,
 
-    PrettyJsonModule,
     RouterModule.forRoot(APP_ROUTES)
   ],
   providers: [DataService],

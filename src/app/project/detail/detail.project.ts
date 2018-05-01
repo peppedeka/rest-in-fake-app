@@ -2,11 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
+import { publishReplay } from 'rxjs/operators/publishReplay';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import { map } from 'rxjs/operators/map';
+import { refCount } from 'rxjs/operators/refCount';
 
 import * as moment from 'moment';
 
 import { TreeNode } from 'primeng/api';
 import { DataTableModule } from 'primeng/primeng';
+import * as beautify from 'json-beautify';
 
 import { Project } from './../../../interface/project.interface';
 import { DataService } from './../../service/data.service';
@@ -18,6 +24,8 @@ import { DataService } from './../../service/data.service';
 export class DetailProjectComponent implements OnInit {
   private _subRouter: Subscription;
   projectName: string;
+
+  currentApi: string;
 
   displayAddAPIDialog: boolean;
 
@@ -33,7 +41,8 @@ export class DetailProjectComponent implements OnInit {
 
   data: TreeNode[];
   detail: string;
-  fakeJson: any;
+  fakeJson: Object;
+  fakeJsonDetails: Object;
   private _dataSub: Subscription;
 
   constructor(private _dataService: DataService, private _route: ActivatedRoute) {
@@ -44,23 +53,29 @@ export class DetailProjectComponent implements OnInit {
     this.organizationData = [];
     this._refreshData();
     this.detail = 'Details';
-    this._dataService.getFakeApi(this.projectName, 'data').subscribe((res: any) => {
-      this.fakeJson = res;
-    });
+    this.fakeJson = {};
+
+
+
 
 
   }
   private _refreshData(): void {
     this._dataSub = this._dataService.getProjectDetails(this.projectName).subscribe((project: any) => {
       this.project = project[this.projectName];
+
+      const event = {
+        node: this.project[0]
+      };
+      this.selectedNode = this.project[0];
+      this.onNodeSelect(event);
       console.log(this.project);
       const organizationProject: Object = {};
 
       const children: object[] = [];
-      this.project.forEach(api => {
-
+      this.project.forEach((api: object) => {
         const fieldChildren: Object[] = [];
-        api.field.forEach(fld => {
+        api['field'].forEach(fld => {
           fieldChildren.push(
             {
               label: 'field',
@@ -68,12 +83,13 @@ export class DetailProjectComponent implements OnInit {
               styleClass: 'ui-person',
               expanded: true,
               name: fld['name'],
-              data: fld
+              data: fld,
+              api: api['api']
             });
         });
 
         const objChildren: Object[] = [];
-        api.obj.forEach(ob => {
+        api['obj'].forEach(ob => {
           objChildren.push(
             {
               label: 'object',
@@ -81,7 +97,8 @@ export class DetailProjectComponent implements OnInit {
               styleClass: 'ui-person',
               expanded: true,
               name: ob['name'],
-              data: ob
+              data: ob,
+              api: api['api']
             });
         });
 
@@ -91,9 +108,10 @@ export class DetailProjectComponent implements OnInit {
             type: 'person',
             styleClass: 'ui-person',
             expanded: true,
-            name: api.api,
+            name: api['api'],
             data: api,
-            children: fieldChildren.concat(objChildren)
+            children: fieldChildren.concat(objChildren),
+            api: api['api']
           });
 
       });
@@ -107,6 +125,13 @@ export class DetailProjectComponent implements OnInit {
 
       console.log(this.organizationData);
       this._dataSub.unsubscribe();
+    });
+  }
+
+  private _refreshFakeJson() {
+    this._dataService.getFakeApi(this.projectName, this.currentApi).subscribe((res: Object) => {
+      this.fakeJson = res;
+      this.fakeJsonDetails = res;
     });
   }
   /*
@@ -126,6 +151,24 @@ export class DetailProjectComponent implements OnInit {
   onNodeSelect(event) {
     console.log(event);
     this.selectedNode = event.node;
+
+    if (this.currentApi !== this.selectedNode['api']) {
+      this.currentApi = this.selectedNode['api'];
+      this._refreshFakeJson();
+    }
+
+    const name: string = this.selectedNode['name'];
+    this.fakeJsonDetails = Object.assign({});
+    if (this.fakeJson[this.selectedNode['name']]) {
+      this.fakeJsonDetails[name] = this.fakeJson[this.selectedNode['name']];
+      if (this.selectedNode['label'] === 'object') {
+        this._dataService.getObj(this.selectedNode['name']).subscribe((obj: object) => {
+          Object.assign(this.fakeJsonDetails[name], { obj: obj });
+        });
+      }
+    } else {
+      this.fakeJsonDetails = this.fakeJson;
+    }
     this.detail = 'Details of ' + this.selectedNode['name'];
   }
   isUnselected(value): boolean {
@@ -135,6 +178,23 @@ export class DetailProjectComponent implements OnInit {
       return false;
     }
   }
+  updateJson() {
+    this._dataService.saveElement(this.selectedNode.label, this.selectedNode.data).subscribe((res) => {
+      console.log(res);
+      this.selectedNode.data = Object.assign({}, res);
+
+      const event = {
+        node: this.selectedNode
+      };
+      this.onNodeSelect(event);
+      this._refreshFakeJson();
+    });
+  }
+
+  getObj(label: string) {
+    return this._dataService.getObj(label);
+  }
+
   ngOnInit() {
   }
 }
